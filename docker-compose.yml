@@ -36,6 +36,24 @@ services:
     networks:
       - bike-net
 
+  producer:
+    build:
+      context: ./producer
+      dockerfile: Dockerfile
+    container_name: bike-producer
+
+    environment:
+    - BootstrapServers=kafka:9092
+    - Topics__VehicleTypes=vehicle-types
+    - Topics__StationStatus=station-status
+    - Topics__StationInformation=station-information
+
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - bike-net
+
 networks:
   bike-net:
     driver: bridge

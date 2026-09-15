@@ -4,27 +4,28 @@ using System.Text.Json;
 
 namespace producer.Services;
 
-public class StationStatusSubtractor
+public class StationStatusService
 {
     private readonly HttpClient _client;
+    private readonly string _stationStatusUrl = "https://gbfs.lyft.com/gbfs/2.3/bkn/en/station_status.json";
 
-    public StationStatusSubtractor(HttpClient client)
+    public StationStatusService(HttpClient client)
     {
         _client = client;
     }
 
-    private async Task<HttpResponseMessage> SendRequestAsync(string url)
+    private async Task<HttpResponseMessage> SendRequestAsync()
     {
-        HttpResponseMessage response = await _client.GetAsync(url);
+        HttpResponseMessage response = await _client.GetAsync(_stationStatusUrl);
         response.EnsureSuccessStatusCode();
         return response;
     }
 
-    public async Task<IEnumerable<StationStatus>> GetStationStatusAsync(string url)
+    public async Task<IEnumerable<StationStatus>> GetStationStatusAsync()
     {
         StationStatusResponseDto? stationResponse = null;
 
-        HttpResponseMessage response = await SendRequestAsync(url);
+        HttpResponseMessage response = await SendRequestAsync();
 
         try
         {

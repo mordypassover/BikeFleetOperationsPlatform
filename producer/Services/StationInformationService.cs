@@ -5,23 +5,24 @@ using System.Text.Json;
 namespace producer.Services;
 
 
-public class StationInfoSubtractor
+public class StationInformationService
 {
     private readonly HttpClient _client;
-    public StationInfoSubtractor(HttpClient client)
+    private readonly string _stationInfoUrl = "https://gbfs.lyft.com/gbfs/2.3/bkn/en/station_information.json";
+    public StationInformationService(HttpClient client)
     {
         _client = client;
     }
-    private async Task<HttpResponseMessage> SendRequestAsync(string url)
+    private async Task<HttpResponseMessage> SendRequestAsync()
     {
-        HttpResponseMessage response = await _client.GetAsync(url);
+        HttpResponseMessage response = await _client.GetAsync(_stationInfoUrl);
         response.EnsureSuccessStatusCode();
         return response;
     }
-    public async Task<IEnumerable<StationInformation>> GetStationInfoAsync(string url)
+    public async Task<IEnumerable<StationInformation>> GetStationInfoAsync()
     {
         StationResponseDto? stationResponse = null;
-        HttpResponseMessage response = await SendRequestAsync(url);
+        HttpResponseMessage response = await SendRequestAsync();
         try
         {
             response.EnsureSuccessStatusCode();

@@ -4,28 +4,28 @@ using System.Text.Json;
 
 namespace producer.Services;
 
-public class VehicleTypeSubtractor
+public class VehicleTypeService
 {
     private readonly HttpClient _client;
-
-    public VehicleTypeSubtractor(HttpClient client)
+    private readonly string _vehicleTypeUrl =  "https://gbfs.lyft.com/gbfs/2.3/bkn/en/vehicle_types.json";
+    public VehicleTypeService(HttpClient client)
     {
         _client = client;
     }
 
-    private async Task<HttpResponseMessage> SendRequestAsync(string url)
+    private async Task<HttpResponseMessage> SendRequestAsync()
     {
-        HttpResponseMessage response = await _client.GetAsync(url);
+        HttpResponseMessage response = await _client.GetAsync(_vehicleTypeUrl);
         response.EnsureSuccessStatusCode();
 
         return response;
     }
 
-    public async Task<IEnumerable<VehicleType>> GetVehicleTypesAsync(string url)
+    public async Task<IEnumerable<VehicleType>> GetVehicleTypesAsync()
     {
         VehicleTypeResponseDto? vehicleResponse = null;
 
-        HttpResponseMessage response = await SendRequestAsync(url);
+        HttpResponseMessage response = await SendRequestAsync();
 
         try
         {
