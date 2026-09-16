@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
@@ -14,10 +15,14 @@ public class StationInformation
     [JsonPropertyName("name")]
     public string Name {  get; set; }
     [JsonPropertyName("lat")]
+    [Range(-90, 90)]
     public float Lat {  get; set; }
+
     [JsonPropertyName("lon")]
+    [Range(-180, 180)]
     public float Lon {  get; set; }
     [JsonPropertyName("capacity")]
+    [Range(0, int.MaxValue)]
     public int Capacity {  get; set; }
 }
 
