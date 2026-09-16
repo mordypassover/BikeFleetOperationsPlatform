@@ -16,18 +16,14 @@ public class StationStatusHandler
         _mongo = mongo;
     }
 
-    public async Task HandleAsync(
-        StationStatus status,
-        CancellationToken cancellationToken = default)
+    public async Task HandleAsync(StationStatus status)
     {
         var previousStatus =
             await _redis.GetAsync(status.StationId);
 
         if (previousStatus == null)
         {
-            await _mongo.AddAsync(
-                status,
-                cancellationToken);
+            await _mongo.AddAsync(status);
 
             await _redis.SetAsync(status);
 
@@ -40,7 +36,7 @@ public class StationStatusHandler
         }
 
 
-        await _mongo.AddAsync(status, cancellationToken);
+        await _mongo.AddAsync(status);
 
         await _redis.SetAsync(status);
     }

@@ -7,11 +7,9 @@ namespace Consumer.Services;
 public class StationInformationService
 {
     private readonly MysqlDbContext _db;
-    private readonly RedisStatusService _redis;
-    public StationInformationService(MysqlDbContext db, RedisStatusService redis)
+    public StationInformationService(MysqlDbContext db)
     {
         _db = db;
-        _redis = redis;
     }
 
     public async Task AddOrUpdateAsync(StationInformation station)
