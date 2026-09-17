@@ -18,8 +18,20 @@ public class StationStatusHandler
 
     public async Task HandleAsync(StationStatus status)
     {
+
+        var stationExists =
+            await _redis.StationExistsAsync(status.StationId);
+
+ 
+        if (!stationExists)
+        {
+            return;
+        }
+
+     
         var previousStatus =
             await _redis.GetAsync(status.StationId);
+
 
         if (previousStatus == null)
         {
@@ -30,12 +42,13 @@ public class StationStatusHandler
             return;
         }
 
-        if (IsSameStatus(previousStatus, status))//no changes
+        
+        if (IsSameStatus(previousStatus, status))
         {
             return;
         }
 
-
+    
         await _mongo.AddAsync(status);
 
         await _redis.SetAsync(status);

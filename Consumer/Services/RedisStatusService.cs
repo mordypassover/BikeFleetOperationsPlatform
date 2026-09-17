@@ -8,14 +8,32 @@ public class RedisStatusService
 {
     private readonly IConnectionMultiplexer _redis;
 
-    public RedisStatusService(
-        IConnectionMultiplexer redis)
+    public RedisStatusService(IConnectionMultiplexer redis)
     {
         _redis = redis;
     }
 
-    public async Task<StationStatus?> GetAsync(
-        string stationId)
+
+    public async Task<bool> StationExistsAsync(string stationId)
+    {
+        var database = _redis.GetDatabase();
+
+        var key = $"station:{stationId}";
+
+        return await database.KeyExistsAsync(key);
+    }
+
+
+    public async Task AddStationAsync(string stationId)
+    {
+        var database = _redis.GetDatabase();
+
+        var key = $"station:{stationId}";
+
+        await database.StringSetAsync(key, "exists");
+    }
+
+    public async Task<StationStatus?> GetAsync(string stationId)
     {
         var database = _redis.GetDatabase();
 
@@ -32,8 +50,8 @@ public class RedisStatusService
             value.ToString());
     }
 
-    public async Task SetAsync(
-        StationStatus status)
+
+    public async Task SetAsync(StationStatus status)
     {
         var database = _redis.GetDatabase();
 
@@ -41,8 +59,6 @@ public class RedisStatusService
 
         var json = JsonSerializer.Serialize(status);
 
-        await database.StringSetAsync(
-            key,
-            json);
+        await database.StringSetAsync(key, json);
     }
 }

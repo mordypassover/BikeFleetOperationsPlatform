@@ -20,8 +20,8 @@ public class MongoStatusService
     }
 
     public async Task AddAsync(
-        StationStatus status,
-        CancellationToken cancellationToken = default)
+       StationStatus status,
+       CancellationToken cancellationToken = default)
     {
         await _collection.InsertOneAsync(
             status,
